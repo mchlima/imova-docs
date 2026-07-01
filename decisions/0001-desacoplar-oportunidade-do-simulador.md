@@ -3,6 +3,7 @@
 - **Status:** aceito (2026-06-30)
 - **Contexto do produto:** Imova — CRM do corretor. A principal porta de entrada de leads hoje é o simulador público (`POST /opportunities`).
 - **Decisão em uma frase:** a estrutura dos dados de enriquecimento da oportunidade deixa de ser **código** e passa a ser **dado editável** (campos personalizados / _custom properties_ agrupadas em seções), no padrão de CRMs como HubSpot/Pipedrive.
+- **⚠️ Atualização (ver [ADR 0002](0002-crm-portavel-multi-tenant.md)):** decidimos que o CRM será um **serviço standalone multi-tenant**. Por isso, todos os modelos deste ADR (`FieldSection`, `FieldDefinition`, `Opportunity`) ganham `tenantId` e suas chaves únicas passam a ser **compostas por tenant** (ex.: `@@unique([tenantId, key])` em vez de `key @unique`). O restante do desenho (JSONB, promoção, tipos, seções) permanece válido.
 
 ---
 
