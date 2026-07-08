@@ -38,18 +38,20 @@ nos outros boards. É organização, não permissão rígida. O dono é configur
 
 - **Menu:** `CRM › {Pipelines › [Qualificação, Corretagem], Contatos, Follow-up, Configurações}`.
   Os pipelines são sub-itens dinâmicos (de `GET /pipelines`); cada um linka
-  `/admin/pipelines/<key>` (**route param**, não query). Itens do menu são
+  `/admin/pipelines/<id>` (**route param = id do pipeline**, não query). Itens do menu são
   **recolhíveis/expansíveis** (padrão recolhido; o grupo/sub-grupo da rota atual abre sozinho).
 - **Rotas:** `/admin/pipelines` é um **resolver** que redireciona pro pipeline do usuário
   (dono) ou o padrão — e resolve deep-links `?oportunidade=<id>` encaminhando pro pipeline da
-  oportunidade. A página do board é `/admin/pipelines/<key>` (`[board]/index.vue`).
+  oportunidade. A página do board é `/admin/pipelines/<id>` (`[id]/index.vue`).
+- **`Pipeline.key`** permanece no dado (identificador estável, uso futuro), mas **não** é
+  usado na URL nem exposto nas configurações; a URL usa o **id**.
 - **Página do pipeline** (antiga "Oportunidades"): a navegação entre pipelines é pelo menu
   (sem abas na página). Lista, kanban e filtro de status escopados ao pipeline ativo.
   Kanban com **colunas sempre lado a lado + scroll lateral** (nº de etapas varia por pipeline).
   Toolbar só-ícone (período, filtros, lista/kanban) + botão **⚙ Configurar**.
-- **Configurações do pipeline** (`/admin/pipelines/<key>/configuracoes` — rota **aninhada no
-  contexto do pipeline**, `[board]` = key): **exclusivas do board** — dono + etapas do funil,
-  com "← Voltar ao pipeline".
+- **Configurações do pipeline** (`/admin/pipelines/<id>/configuracoes` — rota **aninhada no
+  contexto do pipeline**, `[id]`): **exclusivas do board** — nome (label) + dono + etapas do
+  funil, com "← Voltar ao pipeline".
 - **Configurações do CRM** (`/admin/configuracoes`, item no menu CRM): **campos personalizados
   globais** (tenant) — valem para todos os pipelines. Ficam separados do funil (que é por board).
 - **CRM (funil):** seletor de pipeline (padrão = Qualificação) só no gráfico.
