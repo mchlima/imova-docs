@@ -102,24 +102,28 @@ domínio-raiz facilita o cookie de sessão do admin.
   A API alcança via `host.docker.internal` (`extra_hosts: host-gateway`). Sem `db push`
   nem seed — schema/dados já em produção.
 - **nginx** (host): vhost `api.meurevelar.com.br` → `127.0.0.1:3334`
-  (`/etc/nginx/sites-available/api.meurevelar.conf`). TLS público será terminado pela
-  Cloudflare (Full strict), como no bolão.
+  (`/etc/nginx/sites-available/api.meurevelar.conf`), escutando `:80` e `:443`.
+- **TLS**: Cloudflare **Full (strict)** com **Cloudflare Origin Certificate** instalado em
+  `/etc/nginx/ssl/api.meurevelar.{crt,key}` (válido até 2041). ⚠️ Após um `systemctl reload`
+  o socket `:443` novo pode não subir — usar `systemctl restart nginx` na primeira vez.
 - `.env` de produção no VPS = cópia do `.env` local, mudando `CORS_ORIGIN=https://meurevelar.com.br`,
   `COOKIE_SECURE=true` e host do DB → `host.docker.internal`.
-- **Validado**: container healthy, `GET /content/posts` e `/content/categories` → 200 com
-  dados reais; roteamento via nginx (Host `api.meurevelar.com.br`) → 200.
+- **Validado**: container healthy; `https://api.meurevelar.com.br/content/categories` → **200**
+  (público, Full strict); CORS preflight de `https://meurevelar.com.br` → 204 com
+  `allow-origin` + `allow-credentials`. Bolão intacto.
 
 **Atualizar o backend depois:** `cd /opt/imova-backend && git pull && docker compose up -d --build`.
 
 ### Frontend — Vercel (build automático no push da `main`)
 - Deploy dispara sozinho a cada push na `main` de `mchlima/imova-site`.
 
-### Falta para ir ao ar publicamente (ações fora do VPS)
-1. **Cloudflare/DNS**:
-   - `api.meurevelar.com.br` → `191.252.110.66` (proxied, **Full strict** — precisa de
-     Origin Certificate ou origem válida; hoje o nginx escuta só :80).
-   - `meurevelar.com.br` (+ `www`) → Vercel.
+### Falta para o FRONT ir ao ar (ações na Vercel/Cloudflare)
+- ✅ **API pública** `https://api.meurevelar.com.br` — pronta.
+- ✅ **DNS**: `api` (proxied) e `www` (→ Vercel) já resolvem.
+1. **Vercel**: adicionar o domínio `meurevelar.com.br` (+ `www`) ao projeto e criar o
+   registro do **apex** (hoje vazio) conforme instruções da Vercel.
 2. **Vercel — env vars** (Production) + redeploy:
    - `NUXT_PUBLIC_API_BASE=https://api.meurevelar.com.br`
    - `NUXT_PUBLIC_SITE_URL=https://meurevelar.com.br`
-3. **Segurança**: trocar a senha `root` do VPS (foi exposta durante o setup).
+3. **Segurança**: trocar a senha `root` do VPS e **girar o Origin Certificate** (cert+chave
+   trafegaram no chat durante o setup).
