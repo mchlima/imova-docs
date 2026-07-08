@@ -37,11 +37,16 @@ nos outros boards. É organização, não permissão rígida. O dono é configur
 ## 4. Navegação e escopo no admin
 
 - **Menu:** `CRM › Pipelines › {Qualificação, Corretagem}` — os pipelines são sub-itens
-  dinâmicos (de `GET /pipelines`); cada um linka `/admin/pipelines?board=<key>`.
-- **Página `/admin/pipelines`** (antiga "Oportunidades"): abas de pipeline; lista, kanban e
-  filtro de status escopados ao pipeline ativo. Botão **"Configurar pipeline"** →
-  `/admin/configuracoes?tab=funnel&board=<id>` (dono + etapas).
-- **CRM (funil) e Configurações (estágios/dono):** seletor de pipeline (padrão = Qualificação).
+  dinâmicos (de `GET /pipelines`); cada um linka `/admin/pipelines?board=<key>`. **Não há
+  item "Configurações"** no menu: cada pipeline tem o seu (ver abaixo).
+- **Página `/admin/pipelines`** (antiga "Oportunidades"): a navegação entre pipelines é pelo
+  menu (sem abas na página). Lista, kanban e filtro de status escopados ao pipeline ativo.
+  Kanban com **colunas sempre lado a lado + scroll lateral** (nº de etapas varia por pipeline).
+  Toolbar só-ícone (período, filtros, lista/kanban) + botão **⚙ Configurar**.
+- **Configurações do pipeline** (`/admin/configuracoes?board=<id>`): **exclusivas do board**
+  (sem seletor de pipeline) — dono + etapas do funil. A aba "Campos personalizados" continua
+  **global** (tenant), acessível a partir daí.
+- **CRM (funil):** seletor de pipeline (padrão = Qualificação) só no gráfico.
 - **Repasse:** botão "Enviar para \<pipeline\>" no detalhe da oportunidade.
 
 ## 5. Migração
