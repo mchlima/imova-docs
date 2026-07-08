@@ -37,10 +37,13 @@ nos outros boards. É organização, não permissão rígida. O dono é configur
 ## 4. Navegação e escopo no admin
 
 - **Menu:** `CRM › Pipelines › {Qualificação, Corretagem}` — os pipelines são sub-itens
-  dinâmicos (de `GET /pipelines`); cada um linka `/admin/pipelines?board=<key>`. **Não há
-  item "Configurações"** no menu: cada pipeline tem o seu (ver abaixo).
-- **Página `/admin/pipelines`** (antiga "Oportunidades"): a navegação entre pipelines é pelo
-  menu (sem abas na página). Lista, kanban e filtro de status escopados ao pipeline ativo.
+  dinâmicos (de `GET /pipelines`); cada um linka `/admin/pipelines/<key>` (**route param**,
+  não query). **Não há item "Configurações"** no menu: cada pipeline tem o seu (ver abaixo).
+- **Rotas:** `/admin/pipelines` é um **resolver** que redireciona pro pipeline do usuário
+  (dono) ou o padrão — e resolve deep-links `?oportunidade=<id>` encaminhando pro pipeline da
+  oportunidade. A página do board é `/admin/pipelines/<key>` (`[board]/index.vue`).
+- **Página do pipeline** (antiga "Oportunidades"): a navegação entre pipelines é pelo menu
+  (sem abas na página). Lista, kanban e filtro de status escopados ao pipeline ativo.
   Kanban com **colunas sempre lado a lado + scroll lateral** (nº de etapas varia por pipeline).
   Toolbar só-ícone (período, filtros, lista/kanban) + botão **⚙ Configurar**.
 - **Configurações do pipeline** (`/admin/pipelines/<key>/configuracoes` — rota **aninhada no
