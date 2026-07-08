@@ -43,8 +43,9 @@ nos outros boards. É organização, não permissão rígida. O dono é configur
   menu (sem abas na página). Lista, kanban e filtro de status escopados ao pipeline ativo.
   Kanban com **colunas sempre lado a lado + scroll lateral** (nº de etapas varia por pipeline).
   Toolbar só-ícone (período, filtros, lista/kanban) + botão **⚙ Configurar**.
-- **Configurações do pipeline** (`/admin/configuracoes?board=<id>`): **exclusivas do board**
-  (sem seletor de pipeline) — dono + etapas do funil. A aba "Campos personalizados" continua
+- **Configurações do pipeline** (`/admin/pipelines/<key>/configuracoes` — rota **aninhada no
+  contexto do pipeline**, `[board]` = key): **exclusivas do board** (sem seletor de pipeline) —
+  dono + etapas do funil, com "← Voltar ao pipeline". A aba "Campos personalizados" continua
   **global** (tenant), acessível a partir daí.
 - **CRM (funil):** seletor de pipeline (padrão = Qualificação) só no gráfico.
 - **Repasse:** botão "Enviar para \<pipeline\>" no detalhe da oportunidade.
