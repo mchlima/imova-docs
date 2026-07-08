@@ -1,9 +1,9 @@
 # Runbook de Deploy — Meu Revelar
 
-> Estado atual (preparação, **nada em produção**): frontend e backend versionados e
-> enviados ao GitHub; build de produção do frontend validado localmente. Falta escolher
-> hospedagem e provisionar a infraestrutura. **Regra do projeto: não fazer deploy sem
-> autorização explícita.**
+> **Estado (2026-07-08):** backend **deployado e rodando** no VPS (Docker + nginx),
+> conectado ao Postgres de produção. Frontend na Vercel (build automático no push da
+> `main`). Falta só **DNS + Cloudflare + env vars da Vercel** para ir ao ar publicamente
+> (ver §7). **Regra do projeto: não fazer deploy sem autorização explícita.**
 
 ## 1. Arquitetura a hospedar
 
@@ -87,3 +87,39 @@ domínio-raiz facilita o cookie de sessão do admin.
 - **Segredos**: gerar `JWT_SECRET` novo para produção; nunca commitar `.env` (já ignorado).
 - **Identificadores internos** permanecem como `imova` (slug do tenant, bucket `imova-public`,
   cookie `imova_token`) — ver ADR/rebrand; não confundir com a marca pública "Meu Revelar".
+
+---
+
+## 7. Estado real do deploy (2026-07-08)
+
+### Backend — ✅ deployado no VPS
+- **VPS** `191.252.110.66` (Ubuntu 24.04). Convive com outro projeto em produção
+  (`bolao-2026-api`) — **não tocado**.
+- Código em `/opt/imova-backend` (clone de `mchlima/imova-backend`).
+- **Docker**: container `imova-backend-api` (`docker compose`), imagem multi-stage
+  (Node 22 + Prisma), publicado em `127.0.0.1:3334` → porta interna `3333`.
+- **Banco**: o `imova` já vive no Postgres do VPS (container `postgres:17`, `5432`).
+  A API alcança via `host.docker.internal` (`extra_hosts: host-gateway`). Sem `db push`
+  nem seed — schema/dados já em produção.
+- **nginx** (host): vhost `api.meurevelar.com.br` → `127.0.0.1:3334`
+  (`/etc/nginx/sites-available/api.meurevelar.conf`). TLS público será terminado pela
+  Cloudflare (Full strict), como no bolão.
+- `.env` de produção no VPS = cópia do `.env` local, mudando `CORS_ORIGIN=https://meurevelar.com.br`,
+  `COOKIE_SECURE=true` e host do DB → `host.docker.internal`.
+- **Validado**: container healthy, `GET /content/posts` e `/content/categories` → 200 com
+  dados reais; roteamento via nginx (Host `api.meurevelar.com.br`) → 200.
+
+**Atualizar o backend depois:** `cd /opt/imova-backend && git pull && docker compose up -d --build`.
+
+### Frontend — Vercel (build automático no push da `main`)
+- Deploy dispara sozinho a cada push na `main` de `mchlima/imova-site`.
+
+### Falta para ir ao ar publicamente (ações fora do VPS)
+1. **Cloudflare/DNS**:
+   - `api.meurevelar.com.br` → `191.252.110.66` (proxied, **Full strict** — precisa de
+     Origin Certificate ou origem válida; hoje o nginx escuta só :80).
+   - `meurevelar.com.br` (+ `www`) → Vercel.
+2. **Vercel — env vars** (Production) + redeploy:
+   - `NUXT_PUBLIC_API_BASE=https://api.meurevelar.com.br`
+   - `NUXT_PUBLIC_SITE_URL=https://meurevelar.com.br`
+3. **Segurança**: trocar a senha `root` do VPS (foi exposta durante o setup).
