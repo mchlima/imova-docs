@@ -36,9 +36,10 @@ nos outros boards. É organização, não permissão rígida. O dono é configur
 
 ## 4. Navegação e escopo no admin
 
-- **Menu:** `CRM › Pipelines › {Qualificação, Corretagem}` — os pipelines são sub-itens
-  dinâmicos (de `GET /pipelines`); cada um linka `/admin/pipelines/<key>` (**route param**,
-  não query). **Não há item "Configurações"** no menu: cada pipeline tem o seu (ver abaixo).
+- **Menu:** `CRM › {Pipelines › [Qualificação, Corretagem], Contatos, Follow-up, Configurações}`.
+  Os pipelines são sub-itens dinâmicos (de `GET /pipelines`); cada um linka
+  `/admin/pipelines/<key>` (**route param**, não query). Itens do menu são
+  **recolhíveis/expansíveis** (padrão recolhido; o grupo/sub-grupo da rota atual abre sozinho).
 - **Rotas:** `/admin/pipelines` é um **resolver** que redireciona pro pipeline do usuário
   (dono) ou o padrão — e resolve deep-links `?oportunidade=<id>` encaminhando pro pipeline da
   oportunidade. A página do board é `/admin/pipelines/<key>` (`[board]/index.vue`).
@@ -47,9 +48,10 @@ nos outros boards. É organização, não permissão rígida. O dono é configur
   Kanban com **colunas sempre lado a lado + scroll lateral** (nº de etapas varia por pipeline).
   Toolbar só-ícone (período, filtros, lista/kanban) + botão **⚙ Configurar**.
 - **Configurações do pipeline** (`/admin/pipelines/<key>/configuracoes` — rota **aninhada no
-  contexto do pipeline**, `[board]` = key): **exclusivas do board** (sem seletor de pipeline) —
-  dono + etapas do funil, com "← Voltar ao pipeline". A aba "Campos personalizados" continua
-  **global** (tenant), acessível a partir daí.
+  contexto do pipeline**, `[board]` = key): **exclusivas do board** — dono + etapas do funil,
+  com "← Voltar ao pipeline".
+- **Configurações do CRM** (`/admin/configuracoes`, item no menu CRM): **campos personalizados
+  globais** (tenant) — valem para todos os pipelines. Ficam separados do funil (que é por board).
 - **CRM (funil):** seletor de pipeline (padrão = Qualificação) só no gráfico.
 - **Repasse:** botão "Enviar para \<pipeline\>" no detalhe da oportunidade.
 
