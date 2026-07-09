@@ -27,6 +27,7 @@ A corretora precisa solicitar/armazenar a documentação do lead (simulação de
 
 **Front:**
 - Componente reutilizável `DocumentsPanel` (+ `DocumentRow`). Aba **"Documentos"** no drawer da oportunidade (mostra "desta oportunidade" × "outros do contato", reutilizáveis) e seção **Documentos** no drawer do contato (lista única).
+- **Preview:** miniatura de imagens na lista + modal de pré-visualização (imagem e PDF inline via URL pré-assinada; Office cai para download/nova aba).
 
 ## 3. Consequências
 
