@@ -15,12 +15,12 @@ A corretora precisa solicitar/armazenar a documentação do lead (simulação de
 **Modelo — `Document` pertence ao Contato, com vínculo opcional à Oportunidade:**
 - `contactId` (obrigatório) = dono ⇒ reutilizável entre todas as oportunidades da pessoa.
 - `opportunityId` (nullable) = oportunidade que originou o envio ⇒ rastreabilidade.
-- `category` (curada: RG/CPF, comprovante de renda/residência, extrato, IR, certidão, contrato, **Outro** com `categoryLabel` livre), `fileName`, `storageKey`, `mimeType`, `size`, `uploadedBy`.
+- `fileName`, `storageKey`, `mimeType`, `size`, `uploadedBy`. **Sem categoria/tipo manual** — classificar cada arquivo não é prático; a restrição é só por **extensão** (accept no front + allowlist de MIME no backend).
 - `onDelete`: excluir a **oportunidade** faz `SetNull` (o documento continua no contato); excluir o **contato** faz `Cascade`.
 
 **Armazenamento/segurança (só pelo CRM):**
 - Bucket **privado** `imova-leads` no Cloudflare R2 (mesma conta do `imova-public`; `LeadsStorageService` separado do `R2Service`). Sem URL pública.
-- **Upload** proxied pelo backend (`FileInterceptor`, multipart) com validação de tipo (PDF/imagens/Office) e tamanho (**25 MB**); key `tenant/{tenantId}/contacts/{contactId}/{uuid}-{arquivo}`.
+- **Upload** proxied pelo backend (`FileInterceptor`, multipart) com validação de tipo por extensão/MIME (PDF/imagens/Office) e tamanho (**25 MB**); key `tenant/{tenantId}/contacts/{contactId}/{uuid}-{arquivo}`. O front permite **enviar vários arquivos de uma vez** (um POST por arquivo).
 - **Ver/baixar** via **URL pré-assinada** (GET, TTL 5 min) gerada sob demanda; `?download=1` força download, senão abre inline. A `storageKey` nunca é exposta ao front.
 - Endpoints sob `JwtAuthGuard`: `POST /documents`, `GET /documents/contact/:contactId`, `GET /documents/:id/url`, `DELETE /documents/:id`.
 - Config: `R2_LEADS_BUCKET` (credenciais reutilizam o token da conta; suporta `R2_LEADS_ACCESS_KEY_ID/SECRET` dedicados se quiser escopar).
