@@ -26,7 +26,7 @@ A corretora precisa solicitar/armazenar a documentação do lead (simulação de
 - Config: `R2_LEADS_BUCKET` (credenciais reutilizam o token da conta; suporta `R2_LEADS_ACCESS_KEY_ID/SECRET` dedicados se quiser escopar).
 
 **Front:**
-- Componente reutilizável `DocumentsPanel` (+ `DocumentRow`). Aba **"Documentos"** no drawer da oportunidade (mostra "desta oportunidade" × "outros do contato", reutilizáveis) e seção **Documentos** no drawer do contato (lista única).
+- Componente reutilizável `DocumentsPanel` (+ `DocumentRow`). Fica na aba **"Oportunidade"** do drawer (junto da descrição em markdown), mostrando "desta oportunidade" × "outros do contato" (reutilizáveis); e como seção **Documentos** no drawer do contato (lista única).
 - **Preview:** miniatura de imagens na lista + modal de pré-visualização (imagem e PDF inline via URL pré-assinada; Office cai para download/nova aba).
 - **Histórico:** anexar/remover documento **vinculado a uma oportunidade** gera evento (`document_added`/`document_removed`, com o nome do arquivo) na aba Histórico (ADR 0006). Uploads feitos direto no contato (sem oportunidade) não geram evento. O `DocumentsPanel` avisa o drawer (`changed`) para recarregar o histórico ao vivo.
 
