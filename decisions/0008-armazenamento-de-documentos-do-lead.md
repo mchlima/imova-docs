@@ -28,6 +28,7 @@ A corretora precisa solicitar/armazenar a documentação do lead (simulação de
 **Front:**
 - Componente reutilizável `DocumentsPanel` (+ `DocumentRow`). Aba **"Documentos"** no drawer da oportunidade (mostra "desta oportunidade" × "outros do contato", reutilizáveis) e seção **Documentos** no drawer do contato (lista única).
 - **Preview:** miniatura de imagens na lista + modal de pré-visualização (imagem e PDF inline via URL pré-assinada; Office cai para download/nova aba).
+- **Histórico:** anexar/remover documento **vinculado a uma oportunidade** gera evento (`document_added`/`document_removed`, com o nome do arquivo) na aba Histórico (ADR 0006). Uploads feitos direto no contato (sem oportunidade) não geram evento. O `DocumentsPanel` avisa o drawer (`changed`) para recarregar o histórico ao vivo.
 
 ## 3. Consequências
 
